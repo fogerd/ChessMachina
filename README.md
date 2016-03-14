@@ -1,3 +1,4 @@
 # ChessMachina
 
-Can it be done?
+Chess Engine developed by RPI students for their Software Design & Documentation class.
+
