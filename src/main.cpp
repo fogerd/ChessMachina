@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include "defs.h"
+#include "board.h"
+
 
 int main() {
 	
@@ -17,6 +19,12 @@ int main() {
 	std::cout << ("\n");
 	std::cout << ("Type \"help\" or \"?\" to display a list of commands.\n");
 	std::cout << ("\n");
+
+	// Example of creating a board and adding a piece to D2
+	Board b1;
+	b1.PrintBoard();
+	b1.AddPiece(D2);
+	b1.PrintBoard();
 
 	return 0;
 }
