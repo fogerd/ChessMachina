@@ -9,11 +9,15 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+
 // Used by BitBoard to represent piece position 
 typedef unsigned long long U64;
 
 #define ENGINE_NAME "Chess Machina"
 #define BOARD_SQUARE_NUMBER 120
+
+// Needed for Move list array
+#define MAXGAMEMOVES 2028
 
 enum Colors {
 	WHITE,
@@ -46,5 +50,21 @@ enum BoardSquares {
 	A8 = 91, B8, C8, D8, E8, F8, G8, H8, NO_SQUARE
 };
 
+// 4 Bit representation of whether or not each castling move is possible
+// E.X. -> 1001
+// White can castle king side, but not queen side.
+// Black can not castle king side, but can castle queen side.
+enum Castling {
+	WHITE_KING_CASTLE = 1, WHITE_QUEEN_CASTLE = 2, 
+	BLACK_KING_CASTLE = 4, BLACK_QUEEN_CASTLE = 8
+};
+
+struct UndoMove {
+	int move;
+	int castle_permission;
+	int en_passant_square;
+	int fifty_move_count;
+	U64 postion_key;
+};
 
 #endif
