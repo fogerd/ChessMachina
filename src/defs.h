@@ -27,8 +27,8 @@ enum Colors {
 
 enum Pieces{
 	EMPTY, 
-	WHITE_PAWN, WHITE_KNGIHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING,
-	BLACK_PAWN, BLACK_KNGIHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING
+	WHITE_PAWN, WHITE_KNIGHT, WHITE_BISHOP, WHITE_ROOK, WHITE_QUEEN, WHITE_KING,
+	BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING
 };
 
 enum Files {	
@@ -64,7 +64,7 @@ struct UndoMove {
 	int castle_permission;
 	int en_passant_square;
 	int fifty_move_count;
-	U64 postion_key;
+	U64 position_key;
 };
 
 #endif
