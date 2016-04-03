@@ -12,7 +12,7 @@
 
 
 int main() {
-	
+
 	std::cout << ("\n");
 	std::cout << ("%s",ENGINE_NAME) << std::endl;
 	std::cout << ("RPI / SD&D / SPRING 2016\n");
@@ -20,11 +20,8 @@ int main() {
 	std::cout << ("Type \"help\" or \"?\" to display a list of commands.\n");
 	std::cout << ("\n");
 
-	// Example of creating a board and adding a piece to D2
-	Board b1;
-	b1.PrintBoard();
-	b1.AddPiece(D2);
-	b1.PrintBoard();
+	InitAll();
+
 
 	return 0;
 }
