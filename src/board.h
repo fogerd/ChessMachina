@@ -12,21 +12,13 @@
 class Board {
 	public:
 		Board();
-		void InitSquare120To64();
 		void PrintBoard();
 		void AddPiece(int square);
-		inline int convert_file_and_rank_to_square(int file, int rank) 
-			{return (21 + (file)) + ((rank) * 10); }
+		int CountBits(U64 bitboard);
+		int PopBit(U64 *bitboard);
 	private:
 		int pieces[BOARD_SQUARE_NUMBER];
 		U64 Bitboard;
-
-		/*
-			EX - 
-			piece_list[WHITE_BISHOP][0] = C4
-		*/
-		int piece_list[13][10];
-		U64 pawns[3];
 
 		int side_to_move;
 		int en_passant_square;
@@ -42,15 +34,20 @@ class Board {
 
 		int num_of_pieces[13];
 		
+		U64 pawns[3];
+
 		int king_square_location[2];		
 		int big_pieces_location[3];		// All pieces except pawns
 		int major_pieces_location[3]; 	// Rooks & Queens
 		int minor_pieces_location[3];	// Bishops & Knights
+		
+		// E.X.
+		// piece_list[WHITE_BISHOP][0] = C1
+		// piece_list[WHITE_BISHOP][1] = F1
+		int piece_list[13][10];
 
 		int square120_to_square64[BOARD_SQUARE_NUMBER];
 		int square64_to_square120[64];
 
-
 		UndoMove move_history[2048];
-
 };

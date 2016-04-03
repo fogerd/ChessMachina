@@ -1,6 +1,7 @@
 /*
 *	FILE - DEFS.H
-*	PURPORSE - Centralize commonly used variables across multiple files
+*	PURPORSE - Centralize commonly used variables & functions 
+*				for use across multiple files
 * 
 *	AUTHOR - Dennis Fogerty
 *	DATE - 3/14/2016
@@ -66,5 +67,26 @@ struct UndoMove {
 	int fifty_move_count;
 	U64 position_key;
 };
+
+
+extern int square120_to_square64[BOARD_SQUARE_NUMBER];
+extern int square64_to_square120[64];
+
+extern U64 SetMask[64];
+extern U64 ClearMask[64];
+
+#define CONVERT_FILE_AND_RANK_TO_SQUARE(file, rank) ( (21 + (file) ) + ( (rank) * 10 ) )
+#define SQ64_TO_SQ120(sq120) (square120_to_square64[(sq120)])
+#define SQ120_TO_SQ64(sq64) (square64_to_square120[(sq64)])
+#define SETBIT(bitboard, square) ((bitboard) |= SetMask[(square)])
+#define CLEARBIT(bitboard, square) ((bitboard) &= SetMask[(square)])
+
+// init.cpp
+extern void InitAll();
+
+// bitboard.cpp
+extern void PrintBitBoard(U64 bb);
+extern int PopBit(U64 *bb);
+extern int CountBits(U64 b);
 
 #endif
