@@ -7,10 +7,11 @@
 */
 
 #include <iostream>
+#include <stdio.h>
 #include "defs.h"
 #include "board.h"
 #include "hash.h"
-
+#include "io_handler.h"
 
 int main() {
 
@@ -22,10 +23,12 @@ int main() {
 	std::cout << ("\n");
 
 	InitAll();
-	Hash HashGenerator;
 	Board b1;
+	Hash HashGenerator;
+	InputHandler IO_Handler;
+
 	b1.ParseFEN(START_FEN, HashGenerator);
-	b1.PrintBoard();
+	IO_Handler.IO_Loop(b1);
 
 	return 0;
 }
