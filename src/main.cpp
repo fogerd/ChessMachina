@@ -22,6 +22,10 @@ int main() {
 	std::cout << ("\n");
 
 	InitAll();
+	Hash HashGenerator;
+	Board b1;
+	b1.ParseFEN(START_FEN, HashGenerator);
+	b1.PrintBoard();
 
 	return 0;
 }

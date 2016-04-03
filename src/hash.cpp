@@ -44,7 +44,6 @@ U64 Hash::GeneratePosKey(const Board *postion_key) {
 	for(square = 0; square < BOARD_SQUARE_NUMBER; ++square) {
 		piece = postion_key->pieces[square];
 		if(piece!=NO_SQUARE && piece!=EMPTY && piece!=OFFBOARD) {
-			assert (piece>=WHITE_PAWN && piece<=BLACK_KNIGHT);
 			final_key ^= PieceKeys[piece][square];
 		}		
 	}

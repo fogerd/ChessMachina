@@ -16,6 +16,7 @@ typedef unsigned long long U64;
 
 #define ENGINE_NAME "Chess Machina"
 #define BOARD_SQUARE_NUMBER 120
+#define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 // Needed for Move list array
 #define MAXGAMEMOVES 2028

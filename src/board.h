@@ -13,11 +13,14 @@
 #include <iostream>
 #include "defs.h"
 
+class Hash;
+
 class Board {
 	public:
 		Board();
 		void PrintBoard();
 		void ResetBoard();
+		int ParseFEN(char *FEN, Hash HashGenerator);
 		void InitSquare120To64();
 		void AddPiece(int square);
 		int CountBits(U64 bitboard);
@@ -42,9 +45,9 @@ class Board {
 		U64 pawns[3];
 
 		int king_square_location[2];		
-		int big_pieces_location[3];		// All pieces except pawns
-		int major_pieces_location[3]; 	// Rooks & Queens
-		int minor_pieces_location[3];	// Bishops & Knights
+		int big_pieces_location[2];  	// All pieces except pawns
+		int major_pieces_location[2];	// Rooks & Queens
+		int minor_pieces_location[2];	// Bishops & Knights
 		
 		// E.X.
 		// piece_list[WHITE_BISHOP][0] = C1
