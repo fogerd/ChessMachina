@@ -6,24 +6,32 @@
 *	DATE - 3/17/2016
 */
 
+
+#ifndef BOARD_H
+#define BOARD_H
+
 #include <iostream>
 #include "defs.h"
+
+class Hash;
 
 class Board {
 	public:
 		Board();
 		void PrintBoard();
+		void ResetBoard();
+		int ParseFEN(char *FEN, Hash HashGenerator);
+		void InitSquare120To64();
 		void AddPiece(int square);
 		int CountBits(U64 bitboard);
 		int PopBit(U64 *bitboard);
-	private:
-		int pieces[BOARD_SQUARE_NUMBER];
-		U64 Bitboard;
-
 		int side_to_move;
 		int en_passant_square;
 		int fifty_move_count;
 		int castle_permission;
+		int pieces[BOARD_SQUARE_NUMBER];
+	protected:
+		U64 Bitboard;
 
 		// Move counter. Ply = 1 move by 1 side
 		int ply_count;
@@ -37,9 +45,9 @@ class Board {
 		U64 pawns[3];
 
 		int king_square_location[2];		
-		int big_pieces_location[3];		// All pieces except pawns
-		int major_pieces_location[3]; 	// Rooks & Queens
-		int minor_pieces_location[3];	// Bishops & Knights
+		int big_pieces_location[2];  	// All pieces except pawns
+		int major_pieces_location[2];	// Rooks & Queens
+		int minor_pieces_location[2];	// Bishops & Knights
 		
 		// E.X.
 		// piece_list[WHITE_BISHOP][0] = C1
@@ -50,4 +58,8 @@ class Board {
 		int square64_to_square120[64];
 
 		UndoMove move_history[2048];
+
 };
+
+
+#endif
