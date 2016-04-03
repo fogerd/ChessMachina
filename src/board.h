@@ -17,6 +17,7 @@ class Board {
 	public:
 		Board();
 		void PrintBoard();
+		void ResetBoard();
 		void InitSquare120To64();
 		void AddPiece(int square);
 		int CountBits(U64 bitboard);

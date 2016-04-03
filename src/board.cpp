@@ -61,6 +61,43 @@ void Board::PrintBoard() {
 	}
 }
 
+void Board::ResetBoard() {
+	int index = 0;
+
+	for(index = 0; index < BOARD_SQUARE_NUMBER; ++index) {
+		pieces[index] = OFFBOARD;
+	}
+
+	for(index = 0; index < 64; ++index) {
+		pieces[SQ120_TO_SQ64(index)] = EMPTY;
+	}
+
+	for(index = 0; index < 3; ++index) {
+		big_pieces_location[index] = 0;
+		major_pieces_location[index] = 0;
+		minor_pieces_location[index] = 0;
+		pawns[index] = 0ULL;
+	}
+
+	for(index = 0; index < 13; ++index) {
+		num_of_pieces[index] = 0;
+	}
+
+	king_square_location[WHITE] = king_square_location[BLACK] = NO_SQUARE;
+
+	side_to_move = BOTH;
+	en_passant_square = NO_SQUARE;
+	fifty_move_count = 0;
+
+	ply_count = 0;
+	ply_history = 0;
+
+	castle_permission = 0;
+
+	postion_key = 0ULL;
+}
+
+
 void Board::AddPiece(int square) {
 	Bitboard |= (1ULL << square120_to_square64[square]);
 }
