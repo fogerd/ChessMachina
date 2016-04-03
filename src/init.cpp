@@ -6,7 +6,9 @@
 *	DATE - 4/2/2016
 */
 
+#include <stdlib.h>
 #include "defs.h"
+
 
 int square120_to_square64[BOARD_SQUARE_NUMBER];
 int square64_to_square120[64];
