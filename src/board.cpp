@@ -44,7 +44,8 @@ void Board::InitSquare120To64() {
 }
 
 void Board::PrintBoard() {
-	int square,file,rank,piece;
+	int square,file,rank;
+	Pieces piece;
 	char PieceChars[] = ".PNBRQKpnbrqk";
 	printf("\nGame Board:\n\n");
 
@@ -98,7 +99,7 @@ void Board::ResetBoard() {
 	int index = 0;
 
 	for(index = 0; index < BOARD_SQUARE_NUMBER; ++index) {
-		pieces[index] = OFFBOARD;
+		pieces[index] = INVALID;
 	}
 
 	for(index = 0; index < 64; ++index) {
@@ -133,7 +134,7 @@ void Board::ResetBoard() {
 int Board::ParseFEN(char *FEN, Hash HashGenerator) {
 	int  rank = RANK_8;
 	int  file = FILE_A;
-	int  piece = 0;
+	Pieces  piece = EMPTY;
 	int  count = 0;
 	int  i = 0;
 	int  sq64 = 0;
@@ -228,7 +229,6 @@ int Board::ParseFEN(char *FEN, Hash HashGenerator) {
 
 	return 0;
 }
-
 void Board::AddPiece(int square) {
 	Bitboard |= (1ULL << square120_to_square64[square]);
 }

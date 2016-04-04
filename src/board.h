@@ -29,7 +29,7 @@ class Board {
 		int en_passant_square;
 		int fifty_move_count;
 		int castle_permission;
-		int pieces[BOARD_SQUARE_NUMBER];
+		Pieces pieces[BOARD_SQUARE_NUMBER];
 	protected:
 		U64 Bitboard;
 
@@ -61,5 +61,9 @@ class Board {
 
 };
 
-
+#define GET_COLOR_OF_PIECE(piece) ((piece>=WHITE_PAWN&&piece<=BLACK_KING)?(piece<BLACK_PAWN?WHITE:BLACK):CLEAR)
+#define FORWARD_SQUARE(square,num) ((BoardSquares)(square+10*num))
+#define LEFT_SQUARE(square,num) ((BoardSquares)(square-1*num))
+#define RIGHT_SQUARE(square,num) ((BoardSquares)(square+1*num))
+#define BACKWARD_SQUARE(square,num) ((BoardSquares)(square+10*num))
 #endif

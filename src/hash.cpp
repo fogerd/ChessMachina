@@ -38,12 +38,12 @@ U64 Hash::Rand64() {
 U64 Hash::GeneratePosKey(const Board *postion_key) {
 	int square = 0;
 	U64 final_key = 0;
-	int piece = EMPTY;
+	Pieces piece = EMPTY;
 	
 	// pieces
 	for(square = 0; square < BOARD_SQUARE_NUMBER; ++square) {
 		piece = postion_key->pieces[square];
-		if(piece!=NO_SQUARE && piece!=EMPTY && piece!=OFFBOARD) {
+		if(piece!=EMPTY && piece!=INVALID) {
 			final_key ^= PieceKeys[piece][square];
 		}		
 	}
