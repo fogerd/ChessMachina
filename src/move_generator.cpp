@@ -56,15 +56,15 @@ void get_pawn_moves(Board* board,
   if(GET_COLOR_OF_PIECE(board->pieces[front_square])==CLEAR){
     if(is_promotion){
       if(color==WHITE) {
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,WHITE_BISHOP});
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,WHITE_ROOK});
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,WHITE_KNIGHT});
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,WHITE_ROOK});
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_BISHOP));
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_ROOK));
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_KNIGHT));
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_ROOK));
       }else{
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,BLACK_BISHOP});
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,BLACK_ROOK});
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,BLACK_KNIGHT});
-        move_vector->push_back(Move{square, front_square, color, EMPTY, false, false,BLACK_ROOK});
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_BISHOP));
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_ROOK));
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_KNIGHT));
+        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_ROOK));
       }
     }else {
 			if(can_passant&&GET_COLOR_OF_PIECE(board->pieces[square2InFront])==CLEAR){
@@ -78,15 +78,15 @@ void get_pawn_moves(Board* board,
   if(GET_COLOR_OF_PIECE(front_left_square_piece)==opposite){
     if(is_promotion){
       if(color==WHITE) {
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,WHITE_BISHOP});
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,WHITE_ROOK});
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,WHITE_KNIGHT});
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,WHITE_ROOK});
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_BISHOP));
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_ROOK));
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_KNIGHT));
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_ROOK));
       }else{
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,BLACK_BISHOP});
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,BLACK_ROOK});
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,BLACK_KNIGHT});
-        move_vector->push_back(Move{square, front_left_square, color, front_left_square_piece, false, false,BLACK_ROOK});
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_BISHOP));
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_ROOK));
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_KNIGHT));
+        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_ROOK));
       }
     }else {
       move_vector->push_back(Move(square, front_left_square, color));
@@ -97,15 +97,15 @@ void get_pawn_moves(Board* board,
   if(GET_COLOR_OF_PIECE(front_right_square_piece)==opposite){
     if(is_promotion){
       if(color==WHITE) {
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,WHITE_BISHOP});
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,WHITE_ROOK});
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,WHITE_KNIGHT});
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,WHITE_ROOK});
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_BISHOP));
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_ROOK));
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_KNIGHT));
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_ROOK));
       }else{
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,BLACK_BISHOP});
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,BLACK_ROOK});
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,BLACK_KNIGHT});
-        move_vector->push_back(Move{square, front_right_square, color, front_right_square_piece, false, false,BLACK_ROOK});
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_BISHOP));
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_ROOK));
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_KNIGHT));
+        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_ROOK));
       }
     }else {
       move_vector->push_back(Move(square, front_right_square, color));
