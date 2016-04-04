@@ -371,11 +371,10 @@ void get_king_moves(Board* board,
 std::vector<Move>* Move_Generator::genMoves(BoardSquares square,Pieces piece){
   std::vector<Move>* move_vector=new std::vector<Move>;
   Colors color=GET_COLOR_OF_PIECE(piece);
-  Colors opposite=color==WHITE?BLACK:WHITE;
   switch (piece){
     case WHITE_PAWN:{
       bool is_promotion=square>H7;
-			bool can_passant=square>=A2&square<=H2;
+			bool can_passant=square>=A2&&square<=H2;
       BoardSquares front=FORWARD_SQUARE(square,1);
 			BoardSquares front2=FORWARD_SQUARE(square,2);
       get_pawn_moves(board,move_vector,square,color,front,front2,is_promotion,can_passant);
@@ -403,7 +402,7 @@ std::vector<Move>* Move_Generator::genMoves(BoardSquares square,Pieces piece){
 		}
     case BLACK_PAWN: {
 			bool is_promotion = square > A2;
-			bool can_passant = square >= A7 & square <= H7;
+			bool can_passant = square >= A7 && square <= H7;
 			BoardSquares front = BACKWARD_SQUARE(square, 1);
 			BoardSquares front2 = BACKWARD_SQUARE(square, 2);
 			get_pawn_moves(board, move_vector, square, color, front, front2, is_promotion, can_passant);
@@ -429,6 +428,8 @@ std::vector<Move>* Move_Generator::genMoves(BoardSquares square,Pieces piece){
     case BLACK_KING: {
 			break;
 		}
+		default:
+			break;
   }
   return move_vector;
 }
