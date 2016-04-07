@@ -407,7 +407,7 @@ void Move_Generator::gen_moves(std::vector <Move> *move_vector, BoardSquares squ
 			break;
 		}
     case BLACK_PAWN: {
-			bool is_promotion = square > A2;
+			bool is_promotion = square <= A2;
 			bool can_passant = square >= A7 && square <= H7;
 			BoardSquares front = BACKWARD_SQUARE(square, 1);
 			BoardSquares front2 = BACKWARD_SQUARE(square, 2);

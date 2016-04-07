@@ -66,5 +66,5 @@ class Board {
 #define FORWARD_SQUARE(square,num) ((BoardSquares)(square+10*num))
 #define LEFT_SQUARE(square,num) ((BoardSquares)(square-1*num))
 #define RIGHT_SQUARE(square,num) ((BoardSquares)(square+1*num))
-#define BACKWARD_SQUARE(square,num) ((BoardSquares)(square+10*num))
+#define BACKWARD_SQUARE(square,num) ((BoardSquares)(square-10*num))
 #endif
