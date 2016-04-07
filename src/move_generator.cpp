@@ -12,8 +12,8 @@ Move_Generator::Move_Generator(Board *b) {
   board=b;
 }
 
-Move* Move_Generator::genMove(BoardSquares starting_square,
-                              BoardSquares ending_square) {
+Move* Move_Generator::gen_move(BoardSquares starting_square,
+															 BoardSquares ending_square) {
   //Moves are invalid if nothing is moving.
   if(starting_square==ending_square){
     return NULL;
@@ -30,20 +30,20 @@ Move* Move_Generator::genMove(BoardSquares starting_square,
   if(starting_color==ending_color){
     return NULL;
   }
-  std::vector<Move>* possibleMoves= genMoves(starting_square,starting_piece);
+  std::vector<Move> possibleMoves=std::vector<Move>();
+	gen_moves(&possibleMoves,starting_square,starting_piece);
   Move* answer=NULL;
-  for (std::vector<Move>::iterator iter= possibleMoves->begin(); iter!=possibleMoves->end();++iter){
+  for (std::vector<Move>::iterator iter= possibleMoves.begin(); iter!=possibleMoves.end();++iter){
     if((*iter).ending_square==ending_square){
       answer= (Move*)malloc(sizeof *answer);
       *answer=*iter;
       break;
     }
   }
-	free(possibleMoves);
   return answer;
 }
 
-
+//Given the squares that are in front of this pawn, add all possible pawn moves to move_vector
 void get_pawn_moves(Board* board,
                     std::vector<Move>* move_vector,
 										BoardSquares square,
@@ -56,13 +56,13 @@ void get_pawn_moves(Board* board,
   if(GET_COLOR_OF_PIECE(board->pieces[front_square])==CLEAR){
     if(is_promotion){
       if(color==WHITE) {
+				move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_QUEEN));
         move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_BISHOP));
-        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_ROOK));
         move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_KNIGHT));
         move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,WHITE_ROOK));
       }else{
+				move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_QUEEN));
         move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_BISHOP));
-        move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_ROOK));
         move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_KNIGHT));
         move_vector->push_back(Move(square, front_square, color, EMPTY, false, false,BLACK_ROOK));
       }
@@ -78,13 +78,13 @@ void get_pawn_moves(Board* board,
   if(GET_COLOR_OF_PIECE(front_left_square_piece)==opposite){
     if(is_promotion){
       if(color==WHITE) {
+				move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_QUEEN));
         move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_BISHOP));
-        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_ROOK));
         move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_KNIGHT));
         move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,WHITE_ROOK));
       }else{
+				move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_QUEEN));
         move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_BISHOP));
-        move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_ROOK));
         move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_KNIGHT));
         move_vector->push_back(Move(square, front_left_square, color, front_left_square_piece, false, false,BLACK_ROOK));
       }
@@ -97,13 +97,13 @@ void get_pawn_moves(Board* board,
   if(GET_COLOR_OF_PIECE(front_right_square_piece)==opposite){
     if(is_promotion){
       if(color==WHITE) {
+				move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_QUEEN));
         move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_BISHOP));
-        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_ROOK));
         move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_KNIGHT));
         move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,WHITE_ROOK));
       }else{
+				move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_QUEEN));
         move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_BISHOP));
-        move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_ROOK));
         move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_KNIGHT));
         move_vector->push_back(Move(square, front_right_square, color, front_right_square_piece, false, false,BLACK_ROOK));
       }
@@ -113,6 +113,7 @@ void get_pawn_moves(Board* board,
   }
 }
 
+//Add all possible knight moves to the move_vector
 void get_knight_moves(Board* board,
 											std::vector<Move>* move_vector,
 											BoardSquares square,
@@ -187,6 +188,7 @@ void get_knight_moves(Board* board,
 	}
 }
 
+//Add all possible bishop moves to the move_vector.
 void get_bishop_moves(Board* board,
 											std::vector<Move>* move_vector,
 											BoardSquares square,
@@ -239,6 +241,7 @@ void get_bishop_moves(Board* board,
 	}
 }
 
+//Add all possible rook moves to the move_vector
 void get_rook_moves(Board* board,
 										std::vector<Move>* move_vector,
 										BoardSquares square,
@@ -291,6 +294,7 @@ void get_rook_moves(Board* board,
 	}
 }
 
+//Add all kingly moves to the move vector.
 void get_king_moves(Board* board,
 										std::vector<Move>* move_vector,
 										BoardSquares square,
@@ -366,10 +370,11 @@ void get_king_moves(Board* board,
 	}
 }
 
+
+//Add all possible moves of the given piece to the move factor.
 //TODO check for check when generating moves.
 //TODO castling
-std::vector<Move>* Move_Generator::genMoves(BoardSquares square,Pieces piece){
-  std::vector<Move>* move_vector=new std::vector<Move>;
+void Move_Generator::gen_moves(std::vector <Move> *move_vector, BoardSquares square, Pieces piece){
   Colors color=GET_COLOR_OF_PIECE(piece);
   switch (piece){
     case WHITE_PAWN:{
@@ -398,6 +403,7 @@ std::vector<Move>* Move_Generator::genMoves(BoardSquares square,Pieces piece){
 			break;
 		}
     case WHITE_KING: {
+			get_king_moves(board,move_vector,square,color);
 			break;
 		}
     case BLACK_PAWN: {
@@ -426,10 +432,10 @@ std::vector<Move>* Move_Generator::genMoves(BoardSquares square,Pieces piece){
 			break;
 		}
     case BLACK_KING: {
+			get_king_moves(board,move_vector,square,color);
 			break;
 		}
 		default:
 			break;
   }
-  return move_vector;
 }

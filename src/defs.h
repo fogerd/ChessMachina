@@ -71,6 +71,67 @@ struct UndoMove {
 	U64 position_key;
 };
 
+struct Move {
+	BoardSquares starting_square;
+	BoardSquares ending_square;
+	Colors color;
+	Pieces taken_piece;
+	bool is_castle;
+	bool is_en_passant;
+	Pieces promotionType;
+
+
+	Move(BoardSquares ss, BoardSquares es, Colors c,
+			 Pieces taken,
+			 bool cast,
+			 bool p,
+			 Pieces promotion){
+		starting_square=ss;
+		ending_square=es;
+		color=c;
+		taken_piece=taken;
+		is_castle=cast;
+		is_en_passant=p;
+		promotionType=promotion;
+	}
+
+	Move(BoardSquares ss, BoardSquares es, Colors c):
+		taken_piece(EMPTY),
+		is_castle(false),
+		is_en_passant(false),
+		promotionType(EMPTY){
+		starting_square=ss;
+		ending_square=es;
+		color=c;
+	}
+
+	Move(BoardSquares ss,
+			 BoardSquares es,
+			 Colors c,
+			 Pieces taken):
+		is_castle(false),
+		is_en_passant(false),
+		promotionType(EMPTY){
+		starting_square=ss;
+		ending_square=es;
+		color=c;
+		taken_piece=taken;
+	}
+
+	Move(BoardSquares ss,
+			 BoardSquares es,
+			 Colors c,
+			 bool cast,
+			 bool p):
+		taken_piece(EMPTY),
+		promotionType(EMPTY){
+		starting_square=ss;
+		ending_square=es;
+		color=c;
+		is_castle=cast;
+		is_en_passant=p;
+	}
+};
 
 extern int square120_to_square64[BOARD_SQUARE_NUMBER];
 extern int square64_to_square120[64];

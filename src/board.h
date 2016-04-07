@@ -25,6 +25,7 @@ class Board {
 		void AddPiece(int square);
 		int CountBits(U64 bitboard);
 		int PopBit(U64 *bitboard);
+		void ExecuteMove(Move* move);
 		int side_to_move;
 		int en_passant_square;
 		int fifty_move_count;
