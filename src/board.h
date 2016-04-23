@@ -20,6 +20,7 @@ class Board {
 		Board();
 		void PrintBoard();
 		void ResetBoard();
+		void UpdateMaterial();
 		int ParseFEN(char *FEN, Hash HashGenerator);
 		void InitSquare120To64();
 		void AddPiece(int square);
@@ -40,14 +41,16 @@ class Board {
 		// Unique key generated for each possible board position
 		U64 postion_key;
 
-		int num_of_pieces[13];
+		int piece_number[13];
 		
 		U64 pawns[3];
 
-		int king_square_location[2];		
-		int big_pieces_location[2];  	// All pieces except pawns
-		int major_pieces_location[2];	// Rooks & Queens
-		int minor_pieces_location[2];	// Bishops & Knights
+		int king_square_location[2];	
+
+		int big_pieces_count[2];  	// All pieces except pawns
+		int major_pieces_count[2];	// Rooks & Queens
+		int minor_pieces_count[2];	// Bishops & Knights
+		int material_score[2];
 		
 		// E.X.
 		// piece_list[WHITE_BISHOP][0] = C1
