@@ -17,6 +17,40 @@ Board::Board() {
 	InitSquare120To64();
 }
 
+
+void Board::UpdateMaterial() {
+
+	int piece, square, index, color;
+
+	for (index = 0; index < BOARD_SQUARE_NUMBER; ++index) {
+		square = index;
+		piece = pieces[index];
+		if (piece != OFFBOARD && piece != EMPTY) {
+			color = PieceColor[piece];
+
+			if ( BigPiecePostions[piece] == true )
+				big_pieces_count[color]++;
+			if ( MajorPiecePostions[piece] == true )
+				major_pieces_count[color]++;
+			if ( MinorPiecePostions[piece] == true )
+				minor_pieces_count[color]++;
+
+			material_score[color] += PieceValues[piece];
+
+			// piece_list[white_pawn][piece_number] = a1
+			piece_list[piece][piece_number[piece]] = square;
+			piece_number[piece]++;
+
+			if (piece == WHITE_KING)
+				king_square_location[WHITE] = square;
+			if (piece == BLACK_KING)
+				king_square_location[BLACK] = square;
+		}
+	}
+
+}
+
+
 // Convert 120 square board to 64 squares
 void Board::InitSquare120To64() {
 	int index = 0;
@@ -106,14 +140,14 @@ void Board::ResetBoard() {
 	}
 
 	for(index = 0; index < 3; ++index) {
-		big_pieces_location[index] = 0;
-		major_pieces_location[index] = 0;
-		minor_pieces_location[index] = 0;
+		big_pieces_count[index] = 0;
+		major_pieces_count[index] = 0;
+		minor_pieces_count[index] = 0;
 		pawns[index] = 0ULL;
 	}
 
 	for(index = 0; index < 13; ++index) {
-		num_of_pieces[index] = 0;
+		piece_number[index] = 0;
 	}
 
 	king_square_location[WHITE] = king_square_location[BLACK] = NO_SQUARE;
@@ -225,6 +259,8 @@ int Board::ParseFEN(char *FEN, Hash HashGenerator) {
 	}
 
 	postion_key = HashGenerator.GeneratePosKey(this);
+
+	UpdateMaterial();
 
 	return 0;
 }

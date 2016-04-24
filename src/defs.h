@@ -73,6 +73,14 @@ struct UndoMove {
 extern int square120_to_square64[BOARD_SQUARE_NUMBER];
 extern int square64_to_square120[64];
 
+// Easy check for piece positions, value and color
+extern int BigPiecePostions[13];
+extern int MajorPiecePostions[13];
+extern int MinorPiecePostions[13];
+extern int PieceValues[13];
+extern int PieceColor[13];
+
+
 extern U64 SetMask[64];
 extern U64 ClearMask[64];
 
