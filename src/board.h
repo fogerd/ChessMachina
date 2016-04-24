@@ -1,7 +1,7 @@
 /*
 *	FILE - BOARD.H
 *	PURPORSE - Game Board object, contains all information regarding the game.
- * 
+* 
 *	AUTHOR - Dennis Fogerty
 *	DATE - 3/17/2016
 */
@@ -24,6 +24,7 @@ class Board {
 		int ParseFEN(char *FEN, Hash HashGenerator);
 		void InitSquare120To64();
 		void AddPiece(int square);
+		int ValidBoard();
 		int CountBits(U64 bitboard);
 		int PopBit(U64 *bitboard);
 		int side_to_move;
@@ -31,7 +32,7 @@ class Board {
 		int fifty_move_count;
 		int castle_permission;
 		int pieces[BOARD_SQUARE_NUMBER];
-	protected:
+	//protected:
 		U64 Bitboard;
 
 		// Move counter. Ply = 1 move by 1 side
@@ -60,7 +61,7 @@ class Board {
 		int square120_to_square64[BOARD_SQUARE_NUMBER];
 		int square64_to_square120[64];
 
-		UndoMove move_history[2048];
+		UNDOMOVE move_history[2048];
 
 };
 
