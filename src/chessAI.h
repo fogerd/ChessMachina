@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "defs.h"
+#include "board.h"
 
 using namespace std;
 
@@ -12,10 +13,10 @@ class GameControl{
 
 
     public:
-        pair<pair<int,int>,pair<int,int>> minimax( int depth , U64 _B );
-        int maxSearch( int depth , U64 _B );
-        int minSearch( int depth , U64 _B );
-        int Evaluate(U64 _B);
+        int minimax(Board *_B , int depth);
+        int maxSearch( int depth , Board *_B );
+        int minSearch( int depth , Board *_B );
+        int Evaluate(Board *_B);
 
 };
 
