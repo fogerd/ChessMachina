@@ -45,3 +45,48 @@ int PieceColor[13] =
 		WHITE, WHITE, WHITE, WHITE, WHITE, WHITE,
 		BLACK, BLACK, BLACK, BLACK, BLACK, BLACK 
 	};
+
+int PieceIsPawn[13] = 
+	{ 
+		false, 
+		true, false, false, false, false, false, 
+		true, false, false, false, false, false 
+	};	
+
+int PieceIsKnight[13] = 
+	{ 
+		false, 
+		false, true, false, false, false, false,
+		false, true, false, false, false, false 
+	};
+
+int PieceIsKing[13] = 
+	{ 
+		false, 
+		false, false, false, false, false, true,
+		false, false, false, false, false, true 
+	};
+
+int PieceIsQueenRook[13] = 
+	{ 
+		false, 
+		false, false, false, true, true, false, 
+		false, false, false, true, true, false 
+	};
+
+int PieceIsQueenBishop[13] = 
+	{ 
+		false, 
+		false, false, true, false, true, false, 
+		false, false, true, false, true, false 
+	};
+
+int PieceIsSlider[13] =
+	{
+		false,
+		false, false, true, true, true, false,
+		false, false, true, true, true, false
+	};
+
+
+

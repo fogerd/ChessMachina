@@ -10,6 +10,8 @@
 #include "defs.h"
 #include "board.h"
 #include "hash.h"
+#include "move_generator.h"
+#define PERFT "3rk2r/8/8/8/8/8/6p1/R3K2R w KQk - 0 1"
 
 
 int main() {
@@ -23,9 +25,16 @@ int main() {
 
 	InitAll();
 	Hash HashGenerator;
-	Board b1;
-	b1.ParseFEN(START_FEN, HashGenerator);
-	b1.PrintBoard();
+	Board b1[1];
+	b1->ParseFEN(PERFT, HashGenerator);
+	b1->PrintBoard();
+	
+	MOVELIST list[1];
+
+	MoveGenerator MoveGen;
+	MoveGen.GenerateAllMoves(b1, list);
+
+	PrintMoveList(list);
 
 	return 0;
 }
