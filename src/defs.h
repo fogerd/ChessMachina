@@ -1,16 +1,20 @@
-/*
+/******************************************************************************
+*
 *	FILE - DEFS.H
 *	PURPORSE - Centralize commonly used variables & functions 
 *				for use across multiple files
 * 
 *	AUTHOR - Dennis Fogerty
 *	DATE - 3/14/2016
-*/
+*
+******************************************************************************/
 
 #ifndef DEFS_H
 #define DEFS_H
 
 class Board;
+class MoveGenerator;
+class Hash;
 
 // Used by BitBoard to represent piece position 
 typedef unsigned long long U64;
@@ -22,6 +26,7 @@ typedef unsigned long long U64;
 // Needed for Move list array
 #define MAXGAMEMOVES 2028
 #define MAXMOVEPOSITIONS 256
+#define MAXDEPTH 64
 
 enum Colors {
 	WHITE,
@@ -84,18 +89,16 @@ struct UNDOMOVE {
 
 
 
-
-
 /* GAME MOVE */
 
 /*
-0000 0000 0000 0000 0000 0111 1111 -> From 0x7F
-0000 0000 0000 0011 1111 1000 0000 -> To >> 7, 0x7F
-0000 0000 0011 1100 0000 0000 0000 -> Captured >> 14, 0xF
-0000 0000 0100 0000 0000 0000 0000 -> EP 0x40000
-0000 0000 1000 0000 0000 0000 0000 -> Pawn Start 0x80000
-0000 1111 0000 0000 0000 0000 0000 -> Promoted Piece >> 20, 0xF
-0001 0000 0000 0000 0000 0000 0000 -> Castle 0x1000000
+0000 0000 0000 0000 0000 0111 1111    -> From_Square     0x7F
+0000 0000 0000 0011 1111 1000 0000    -> To_Square       >> 7, 0x7F
+0000 0000 0011 1100 0000 0000 0000    -> Captured_Piece  >> 14, 0xF
+0000 0000 0100 0000 0000 0000 0000    -> EnPassant       0x40000
+0000 0000 1000 0000 0000 0000 0000    -> Pawn Start      0x80000
+0000 1111 0000 0000 0000 0000 0000    -> Promoted Piece  >> 20, 0xF
+0001 0000 0000 0000 0000 0000 0000    -> Castle          0x1000000
 */
 
 #define FROMSQUARE(move) ( (move)      & 0x7F)
@@ -110,6 +113,7 @@ struct UNDOMOVE {
 #define MOVEFLAGCAPATURE  0x7C000
 #define MOVEFLAGPROMOTION 0xF00000
 
+#define NOMOVE 0
 
 extern int square120_to_square64[BOARD_SQUARE_NUMBER];
 extern int square64_to_square120[64];
@@ -118,9 +122,9 @@ extern U64 SideKey;
 extern U64 CastleKeys[16];
 
 // Easy check for piece positions, value and color
-extern int BigPiecePostions[13];
-extern int MajorPiecePostions[13];
-extern int MinorPiecePostions[13];
+extern int IsBigPiece[13];
+extern int IsMajorPiece[13];
+extern int IsMinorPiece[13];
 extern int PieceValues[13];
 extern int PieceColor[13];
 
@@ -141,8 +145,12 @@ extern int PieceIsSlider[13];
 #define CONVERT_FILE_AND_RANK_TO_SQUARE(file, rank) ( (21 + (file) ) + ( (rank) * 10 ) )
 #define SQ64_TO_SQ120(sq120) (square120_to_square64[(sq120)])
 #define SQ120_TO_SQ64(sq64) (square64_to_square120[(sq64)])
+#define POP(b) PopBit(b)
+#define CNT(b) CountBits(b)
 #define SETBIT(bitboard, square) ((bitboard) |= SetMask[(square)])
-#define CLEARBIT(bitboard, square) ((bitboard) &= SetMask[(square)])
+//#define SETBIT(bitboard, square) (SetBit(bitboard, square))
+
+#define CLEARBIT(bitboard, square) ((bitboard) &= ClearMask[(square)])
 
 #define PieceIsKnight(p) (PieceIsKnight[(p)])
 #define PieceIsQueenRook(p) (PieceIsQueenRook[(p)])
@@ -156,10 +164,30 @@ extern void InitAll();
 extern void PrintBitBoard(U64 bb);
 extern int PopBit(U64 *bb);
 extern int CountBits(U64 b);
+//extern void SetBit(U64 *b, int square);
 
 // attack_geneartor.cpp
 extern int IsSquareAttacked(const int square, const int side, Board *board);
 
+
+// debug.cpp
+extern bool ValidMoveList(const MOVELIST *list,  const Board *pos);
+extern bool SqIs120(const int sq);
+extern bool PceValidEmptyOffbrd(const int pce);
+extern bool SquareIsOnBoard(const int sq);
+extern bool ValidSide(const int side);
+extern bool ValidPieceOrEmpty(const int pce);
+extern bool ValidPiece(const int pce);
+
+extern char * PrintMove(const int move);
 extern void PrintMoveList(const MOVELIST *move_list);
+extern int ParseMove(char * input_move, Board *gameboard, MoveGenerator MoveGen);
+
+extern void TakeMove(Board *gameboard);
+
+extern int MakeMove(Board *gameboard, int move);
+
+extern void PerftTest(int depth, Board *pos, MoveGenerator MoveGen);
+
 
 #endif

@@ -1,14 +1,17 @@
-/*
+/******************************************************************************
+*
 *	FILE - MOVE_GENERATOR.CPP
 *	PURPORSE - Object for generating all possible moves for a given board position
- * 
+* 
 *	AUTHOR - Dennis Fogerty
 *	DATE - 4/23/2016
-*/
+*
+******************************************************************************/
 
 #include "defs.h"
 #include "move_generator.h"
 #include "board.h"
+#include <assert.h>
 
 
 #define MOVE(from, to, capture, promotion, flag) \
@@ -135,7 +138,7 @@ void MoveGenerator::GenerateAllPawnMoves(Board *gameboard, MOVELIST *move_list) 
 		}
 		/* BLACK SIDE CASTLING */
 		if(gameboard->castle_permission & BLACK_KING_CASTLE) {
-			if(gameboard->pieces[F8] == EMPTY && gameboard->pieces[G1] == EMPTY) {
+			if(gameboard->pieces[F8] == EMPTY && gameboard->pieces[G8] == EMPTY) {
 				if(!IsSquareAttacked(E8,WHITE,gameboard) && !IsSquareAttacked(F8,WHITE,gameboard) ) {
 					AddQuietMove(gameboard, MOVE(E8, G8, EMPTY, EMPTY, MOVEFLAGCASTLE), move_list);
 				}
@@ -143,7 +146,7 @@ void MoveGenerator::GenerateAllPawnMoves(Board *gameboard, MOVELIST *move_list) 
 		}
 
 		if(gameboard->castle_permission & BLACK_QUEEN_CASTLE) {
-			if(gameboard->pieces[D8] == EMPTY && gameboard->pieces[C1] == EMPTY && gameboard->pieces[B1] == EMPTY) {
+			if(gameboard->pieces[D8] == EMPTY && gameboard->pieces[C8] == EMPTY && gameboard->pieces[B8] == EMPTY) {
 				if(!IsSquareAttacked(E8,WHITE,gameboard) && !IsSquareAttacked(D8,WHITE,gameboard) ) {
 					AddQuietMove(gameboard, MOVE(E8, C8, EMPTY, EMPTY, MOVEFLAGCASTLE), move_list);
 				}
@@ -154,15 +157,23 @@ void MoveGenerator::GenerateAllPawnMoves(Board *gameboard, MOVELIST *move_list) 
 
 void MoveGenerator::GenerateAllSlideMoves(Board *gameboard, MOVELIST *move_list) {
 	piece_index = sliding_pieces_index[side];
-	piece = sliding_pieces[piece_index];
+	piece = sliding_pieces[piece_index++];
 
+	// Loop through all of sliding pieces for current color
 	while (piece != 0) {
+		assert(ValidPiece(piece));
+
+		//std::cout << "NUM OF " << piece << " " << gameboard->piece_number[piece] << std::endl;
 
 		for (piece_number = 0; piece_number < gameboard->piece_number[piece]; ++piece_number) {
 			square = gameboard->piece_list[piece][piece_number];
 
+			//std::cout << "   BISHOP" << " " << SQ64_TO_SQ120(square) << std::endl;
+
+			assert(SquareIsOnBoard(square));
+
 			for (index = 0; index < number_of_directions_per_piece[piece]; ++index) {
-				direction = piece_direction[piece][index];
+				direction = piece__move_directions[piece][index];
 				tmp_square = square + direction;
 
 				while (!SQUAREOFFBOARD(tmp_square)) {
@@ -174,6 +185,7 @@ void MoveGenerator::GenerateAllSlideMoves(Board *gameboard, MOVELIST *move_list)
 						break;
 					}
 				AddQuietMove(gameboard, MOVE(square, tmp_square, EMPTY, EMPTY, 0), move_list);
+				//std::cout << "    ADDING BISHOP" << " " << SQ64_TO_SQ120(square) << "," << SQ64_TO_SQ120(tmp_square) << std::endl;
 				tmp_square += direction;
 				}
 			}
@@ -188,12 +200,14 @@ void MoveGenerator::GenerateAllNonSlideMoves(Board *gameboard, MOVELIST *move_li
 	piece = non_sliding_pieces[piece_index++];
 
 	while (piece != 0) {
+		assert(ValidPiece(piece));
 
 		for (piece_number = 0; piece_number < gameboard->piece_number[piece]; ++piece_number) {
 			square = gameboard->piece_list[piece][piece_number];
+			assert(SquareIsOnBoard(square));
 
 			for (index = 0; index < number_of_directions_per_piece[piece]; ++index) {
-				direction = piece_direction[piece][index];
+				direction = piece__move_directions[piece][index];
 				tmp_square = square + direction;
 
 				if (SQUAREOFFBOARD(tmp_square)) {
@@ -213,6 +227,7 @@ void MoveGenerator::GenerateAllNonSlideMoves(Board *gameboard, MOVELIST *move_li
 
 		piece = non_sliding_pieces[piece_index++];
 	}
+	assert(ValidMoveList(move_list, gameboard));
 }
 
 

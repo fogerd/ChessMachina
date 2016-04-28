@@ -1,10 +1,12 @@
-/*
+/******************************************************************************
+*
 *	FILE - BOARD.CPP
 *	PURPORSE - Game Board object function implementations.
- * 
+* 
 *	AUTHOR - Dennis Fogerty
 *	DATE - 3/17/2016
-*/
+*
+******************************************************************************/
 
 #include <assert.h>
 #include <stdio.h>
@@ -12,14 +14,34 @@
 #include "board.h"
 #include "hash.h"
 
+
+int PceListOk(const Board *pos) {
+	int pce = WHITE_PAWN;
+	int sq;
+	int num;
+	for (pce = WHITE_PAWN; pce <= BLACK_KING; ++pce) {
+		if(pos->piece_number[pce]<0 || pos->piece_number[pce]>=10) 
+			return false;
+	}
+
+	if (pos->piece_number[WHITE_KING]!=1 || pos->piece_number[BLACK_KING]!=1) 
+		return false;
+
+	for (pce = WHITE_PAWN; pce <= BLACK_KING; ++pce) {
+		for (num = 0; num < pos->piece_number[pce]; ++num) {
+			sq = pos->piece_list[pce][num];
+			if (!SquareIsOnBoard(sq)) 
+				return false;
+		}
+	}
+    return true;
+}
+
 Board::Board() {
-	U64 Bitboard = 0ULL;
 	InitSquare120To64();
 }
 
-
-void Board::UpdateMaterial() {
-
+void Board::UpdateBoard() {
 	int piece, square, index, color;
 
 	for (index = 0; index < BOARD_SQUARE_NUMBER; ++index) {
@@ -28,38 +50,140 @@ void Board::UpdateMaterial() {
 		if (piece != OFFBOARD && piece != EMPTY) {
 			color = PieceColor[piece];
 
-			if ( BigPiecePostions[piece] == true )
+			if ( IsBigPiece[piece] == true )
 				big_pieces_count[color]++;
-			if ( MajorPiecePostions[piece] == true )
+			if ( IsMajorPiece[piece] == true )
 				major_pieces_count[color]++;
-			if ( MinorPiecePostions[piece] == true )
+			if ( IsMinorPiece[piece] == true )
 				minor_pieces_count[color]++;
 
 			material_score[color] += PieceValues[piece];
 
-			// piece_list[white_pawn][piece_number] = a1
 			piece_list[piece][piece_number[piece]] = square;
 			piece_number[piece]++;
 
-			if (piece == WHITE_KING)
+
+			if (piece == WHITE_KING) {
 				king_square_location[WHITE] = square;
+				std::cout << "KING MOVED TO " << SQ64_TO_SQ120(king_square_location[0]) << std::endl;
+				//PrintBoard();
+			}
 			if (piece == BLACK_KING)
 				king_square_location[BLACK] = square;
+
+			if (piece == WHITE_PAWN) {
+				SETBIT(pawns[WHITE],SQ64_TO_SQ120(square));
+				SETBIT(pawns[BOTH],SQ64_TO_SQ120(square));
+			}
+			else if (piece == BLACK_PAWN) {
+				SETBIT(pawns[BLACK],SQ64_TO_SQ120(square));
+				SETBIT(pawns[BOTH],SQ64_TO_SQ120(square));
+			}
 		}
 	}
 
-	if (piece == WHITE_PAWN) {
-		SETBIT(pawns[WHITE],SQ120_TO_SQ64(square));
-		SETBIT(pawns[BOTH],SQ120_TO_SQ64(square));
-	}
-	else if (piece == BLACK_PAWN) {
-		SETBIT(pawns[BLACK],SQ120_TO_SQ64(square));
-		SETBIT(pawns[BOTH],SQ120_TO_SQ64(square));
-	}
 }
 
-int Board::ValidBoard() {
-	return 0;
+bool Board::ValidBoard() {
+	int t_pceNum[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int t_bigPce[2] = {0, 0};
+	int t_majPce[2] = {0, 0};
+	int t_minPce[2] = {0, 0};
+	int t_material[2] = {0, 0};
+
+	int sq64,t_piece,t_pce_num,sq120,colour,pcount;
+
+	U64 t_pawns[3] = {0ULL, 0ULL, 0ULL};
+
+	t_pawns[WHITE] = pawns[WHITE];
+	t_pawns[BLACK] = pawns[BLACK];
+	t_pawns[BOTH] = pawns[BOTH];
+
+	// check piece lists
+	for(t_piece = WHITE_PAWN; t_piece <= BLACK_KING; ++t_piece) {
+		for(t_pce_num = 0; t_pce_num < piece_number[t_piece]; ++t_pce_num) {
+			sq120 = piece_list[t_piece][t_pce_num];
+			
+			if (pieces[sq120]==t_piece)
+				continue;
+			else {
+				std::cout << "\nFUCK" << std::endl;
+				PrintBoard();
+				std::cout << "WHITE KING " << SQ64_TO_SQ120(king_square_location[0]) << std::endl;
+
+				std::cout << "BLACK KING " << SQ64_TO_SQ120(king_square_location[1]) << std::endl;
+
+				//TakeMove(this);
+				//int move = move_history[ply_history].move;
+				//PrintBoard();
+				//MakeMove(this, move);
+				std::cout << pieces[sq120] << "!=" << t_piece << std::endl;
+				return -1;
+			}
+
+		}
+	}
+
+	// check piece count and other counters
+	for(sq64 = 0; sq64 < 64; ++sq64) {
+		sq120 = SQ120_TO_SQ64(sq64);
+		t_piece = pieces[sq120];
+		t_pceNum[t_piece]++;
+		colour = PieceColor[t_piece];
+		if( IsBigPiece[t_piece] == true) t_bigPce[colour]++;
+		if( IsMinorPiece[t_piece] == true) t_minPce[colour]++;
+		if( IsMajorPiece[t_piece] == true) t_majPce[colour]++;
+
+		t_material[colour] += PieceValues[t_piece];
+	}
+
+	for(t_piece = WHITE_PAWN; t_piece <= BLACK_KING; ++t_piece) {
+		assert(t_pceNum[t_piece]==piece_number[t_piece]);
+	}
+
+	// check bitboards count
+	pcount = CNT(t_pawns[WHITE]);
+	assert(pcount == piece_number[WHITE_PAWN]);
+	pcount = CNT(t_pawns[BLACK]);
+	assert(pcount == piece_number[BLACK_PAWN]);
+	pcount = CNT(t_pawns[BOTH]);
+	assert(pcount == (piece_number[BLACK_PAWN] + piece_number[WHITE_PAWN]));
+
+	// check bitboards squares
+	while(t_pawns[WHITE]) {
+		sq64 = POP(&t_pawns[WHITE]);
+		assert(pieces[SQ120_TO_SQ64(sq64)] == WHITE_PAWN);
+	}
+
+	while(t_pawns[BLACK]) {
+		sq64 = POP(&t_pawns[BLACK]);
+		assert(pieces[SQ120_TO_SQ64(sq64)] == BLACK_PAWN);
+	}
+
+	while(t_pawns[BOTH]) {
+		sq64 = POP(&t_pawns[BOTH]);
+		assert( (pieces[SQ120_TO_SQ64(sq64)] == BLACK_PAWN) || (pieces[SQ120_TO_SQ64(sq64)] == WHITE_PAWN) );
+	}
+
+	assert(t_material[WHITE]==material_score[WHITE] && t_material[BLACK]==material_score[BLACK]);
+	assert(t_minPce[WHITE]==minor_pieces_count[WHITE] && t_minPce[BLACK]==minor_pieces_count[BLACK]);
+	assert(t_majPce[WHITE]==major_pieces_count[WHITE] && t_majPce[BLACK]==major_pieces_count[BLACK]);
+	assert(t_bigPce[WHITE]==big_pieces_count[WHITE] && t_bigPce[BLACK]==big_pieces_count[BLACK]);
+
+	assert(side_to_move==WHITE || side_to_move==BLACK);
+	assert(HashGenerator.GeneratePosKey(this) == position_key);
+
+	assert(en_passant_square==NO_SQUARE || ( rank_of[en_passant_square]==RANK_6 && side_to_move == WHITE)
+		 || ( rank_of[en_passant_square]==RANK_3 && side_to_move == BLACK));
+
+	assert(pieces[king_square_location[WHITE]] == WHITE_KING);
+	assert(pieces[king_square_location[BLACK]] == BLACK_KING);
+
+	assert(castle_permission >= 0 && castle_permission <= 15);
+
+	assert(PceListOk(this));
+
+	return true;
 }
 
 // Convert 120 square board to 64 squares
@@ -135,7 +259,7 @@ void Board::PrintBoard() {
 			);
 	
 	// POSTION HASH KEY
-	printf("PosKey - %llX\n",postion_key);
+	printf("PosKey - %llX\n",position_key);
 
 }
 
@@ -173,7 +297,7 @@ void Board::ResetBoard() {
 
 	castle_permission = 0;
 
-	postion_key = 0ULL;
+	position_key = 0ULL;
 }
 
 int Board::ParseFEN(char *FEN, Hash HashGenerator) {
@@ -184,7 +308,6 @@ int Board::ParseFEN(char *FEN, Hash HashGenerator) {
 	int  i = 0;
 	int  sq64 = 0;
 	int  sq120 = 0;
-
 	ResetBoard();
 
 	while ((rank >= RANK_1) && *FEN) {
@@ -233,6 +356,9 @@ int Board::ParseFEN(char *FEN, Hash HashGenerator) {
 			if (piece != EMPTY) {
 				pieces[sq120] = piece;
 			}
+			if (piece == WHITE_KING) {
+				std::cout << sq120 << std::endl;
+			}
 			file++;
 		}
 		FEN++;
@@ -270,13 +396,9 @@ int Board::ParseFEN(char *FEN, Hash HashGenerator) {
 		en_passant_square = CONVERT_FILE_AND_RANK_TO_SQUARE(file,rank);
 	}
 
-	postion_key = HashGenerator.GeneratePosKey(this);
+	position_key = HashGenerator.GeneratePosKey(this);
 
-	UpdateMaterial();
+	UpdateBoard();
 
 	return 0;
-}
-
-void Board::AddPiece(int square) {
-	Bitboard |= (1ULL << square120_to_square64[square]);
 }
