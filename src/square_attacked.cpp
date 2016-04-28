@@ -1,13 +1,17 @@
-/*
+/******************************************************************************
+*
 *	FILE - SQUARE_ATTACKED.CPP
 *	PURPORSE - 
- * 
+* 
 *	AUTHOR - Dennis Fogerty
 *	DATE - 4/23/2016
-*/
+*
+******************************************************************************/
 
 #include "defs.h"
 #include "board.h"
+#include <assert.h>
+
 
 // Rules for which squares a piece attacks from its current position
 const int KnightDirections[8] = { -8, -19, -21, -12, 8, 19, 21, 12 };
@@ -20,6 +24,10 @@ const int KingDirections[8]   = { -1, -10, 1, 10, -9, -11, 11, 9 };
 // Looks at all squares which if a certain piece exists,
 // the current square is being attacked
 int IsSquareAttacked(const int square, const int side, Board *board) {
+
+	assert(SquareIsOnBoard(square));
+	assert(ValidSide(side));
+	assert(board->ValidBoard());
 
 	int piece;
 	int index;
@@ -35,19 +43,24 @@ int IsSquareAttacked(const int square, const int side, Board *board) {
 		if (board->pieces[square+11] == BLACK_PAWN || board->pieces[square+9] == BLACK_PAWN)
 			return true;
 	}
-
+	
 	// KNIGHTS
 	for (index = 0; index < 8; ++index) {
 		piece = board->pieces[square + KnightDirections[index]];
-		if (PieceIsKnight[piece] && PieceColor[piece] == side)
+		assert(PceValidEmptyOffbrd(piece));
+
+		if (piece != OFFBOARD && PieceIsKnight[piece] && PieceColor[piece] == side)
 			return true;
 	}
-	
+
 	// QUEENS & ROOKS
 	for (index = 0; index < 4; ++index) {
 		direction = RookDirections[index];
 		tmp_square = square + direction;
+		assert(SqIs120(tmp_square));
+
 		piece = board->pieces[tmp_square];
+		assert(PceValidEmptyOffbrd(piece));
 
 		while (piece != OFFBOARD) {
 			if (piece != EMPTY) {
@@ -57,6 +70,7 @@ int IsSquareAttacked(const int square, const int side, Board *board) {
 				break;
 			}
 			tmp_square += direction;
+			assert(SqIs120(tmp_square));
 			piece = board->pieces[tmp_square];
 		}
 	}
@@ -65,7 +79,10 @@ int IsSquareAttacked(const int square, const int side, Board *board) {
 	for (index = 0; index < 4; ++index) {
 		direction = BishopDirections[index];
 		tmp_square = square + direction;
+		assert(SqIs120(tmp_square));
+
 		piece = board->pieces[tmp_square];
+		assert(PceValidEmptyOffbrd(piece));
 
 		while (piece != OFFBOARD) {
 			if (piece != EMPTY) {
@@ -75,6 +92,8 @@ int IsSquareAttacked(const int square, const int side, Board *board) {
 				break;
 			}
 			tmp_square += direction;
+			assert(SqIs120(tmp_square));
+
 			piece = board->pieces[tmp_square];
 		}
 	}
@@ -82,9 +101,10 @@ int IsSquareAttacked(const int square, const int side, Board *board) {
 	// KING
 	for (int index = 0; index < 8; ++index)	{
 		piece = board->pieces[square + KingDirections[index]];
+		assert(PceValidEmptyOffbrd(piece));
+
 		if (PieceIsKing[piece] && PieceColor[piece] == side)
 			return true;
 	}
-
 	return 0;
 }

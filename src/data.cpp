@@ -11,21 +11,21 @@
 	}
 */
 
-int BigPiecePostions[13] = 
+int IsBigPiece[13] = 
 	{ 
 		false, 
 		false, true, true, true, true, true, 
 		false, true, true, true, true, true 
 	};
 
-int MajorPiecePostions[13] = 
+int IsMajorPiece[13] = 
 	{ 
 		false, 
 		false, false, false, true, true, true, 
 		false, false, false, true, true, true 
 	};
 
-int MinorPiecePostions[13] = 
+int IsMinorPiece[13] = 
 	{ 
 		false, 
 		false, true, true, false, false, false, 
@@ -87,6 +87,3 @@ int PieceIsSlider[13] =
 		false, false, true, true, true, false,
 		false, false, true, true, true, false
 	};
-
-
-

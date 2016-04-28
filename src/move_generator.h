@@ -1,10 +1,25 @@
-/*
+/******************************************************************************
+*
 *	FILE - MOVE_GENERATOR.H
-*	PURPORSE -	PURPORSE - Object for generating all possible moves for a given board position
+*	PURPORSE - Generate all possible legal moves for a given board position.
 * 
+*	FUNCTIONS -
+*	AddQuietMove() - Add a move to the move list
+*	AddCaptureMove() - Add a move that includes capturing a piece to move list.
+*	AddEnPassantMove() - Add a move that creates an EnPassant square to move list.
+*	GenerateAllMoves() - Generates all legal moves for current side to play of a 
+*							given board.
+*
+*	VARIABLES -
+*	int sliding_pieces[] - Array of pieces which can slide multiple squares.
+*							0's are placed at the end 
+*
+*	int sliding_pieces_index[] - 
+*
 *	AUTHOR - Dennis Fogerty
 *	DATE - 4/23/2016
-*/
+*
+******************************************************************************/
 
 
 #ifndef MOVE_GENERATOR_H
@@ -48,7 +63,7 @@ class MoveGenerator {
 		const int number_of_directions_per_piece[13] = {
 			0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8
 		};
-		const int piece_direction[13][8] = {
+		const int piece__move_directions[13][8] = {
 			{ 0, 0, 0, 0, 0, 0, 0 },                // EMPTY
 			{ 0, 0, 0, 0, 0, 0, 0 },                // WHITE_PAWNS
 			{ -8, -19,	-21, -12, 8, 19, 21, 12 },  // WHITE_KNIGHT
