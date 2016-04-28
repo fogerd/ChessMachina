@@ -10,6 +10,7 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+class Board;
 
 // Used by BitBoard to represent piece position 
 typedef unsigned long long U64;
@@ -20,6 +21,7 @@ typedef unsigned long long U64;
 
 // Needed for Move list array
 #define MAXGAMEMOVES 2028
+#define MAXMOVEPOSITIONS 256
 
 enum Colors {
 	WHITE,
@@ -61,7 +63,18 @@ enum Castling {
 	BLACK_KING_CASTLE = 4, BLACK_QUEEN_CASTLE = 8
 };
 
-struct UndoMove {
+
+struct MOVE {
+	int move;
+	int score;
+};
+
+struct MOVELIST {
+	MOVE moves[MAXMOVEPOSITIONS];
+	int move_count;
+};
+
+struct UNDOMOVE {
 	int move;
 	int castle_permission;
 	int en_passant_square;
@@ -70,8 +83,39 @@ struct UndoMove {
 };
 
 
+
+
+
+/* GAME MOVE */
+
+/*
+0000 0000 0000 0000 0000 0111 1111 -> From 0x7F
+0000 0000 0000 0011 1111 1000 0000 -> To >> 7, 0x7F
+0000 0000 0011 1100 0000 0000 0000 -> Captured >> 14, 0xF
+0000 0000 0100 0000 0000 0000 0000 -> EP 0x40000
+0000 0000 1000 0000 0000 0000 0000 -> Pawn Start 0x80000
+0000 1111 0000 0000 0000 0000 0000 -> Promoted Piece >> 20, 0xF
+0001 0000 0000 0000 0000 0000 0000 -> Castle 0x1000000
+*/
+
+#define FROMSQUARE(move) ( (move)      & 0x7F)
+#define TOSQUARE(move)   (((move)>>7)  & 0x7F)
+#define CAPTURED(move)   (((move)>>14) & 0xF)
+#define PROMOTED(move)   (((move)>>20) & 0xF)
+
+#define MOVEFLAGENPASSANT 0x40000
+#define MOVEFLAGPAWNSTART 0x80000   // PAWN made first move, creating an EnPassant square 
+#define MOVEFLAGCASTLE    0x1000000
+
+#define MOVEFLAGCAPATURE  0x7C000
+#define MOVEFLAGPROMOTION 0xF00000
+
+
 extern int square120_to_square64[BOARD_SQUARE_NUMBER];
 extern int square64_to_square120[64];
+extern U64 PieceKeys[13][120];
+extern U64 SideKey;
+extern U64 CastleKeys[16];
 
 // Easy check for piece positions, value and color
 extern int BigPiecePostions[13];
@@ -80,15 +124,30 @@ extern int MinorPiecePostions[13];
 extern int PieceValues[13];
 extern int PieceColor[13];
 
-
 extern U64 SetMask[64];
 extern U64 ClearMask[64];
+
+extern int file_of[BOARD_SQUARE_NUMBER];
+extern int rank_of[BOARD_SQUARE_NUMBER];
+
+extern int PieceIsKing[13];
+extern int PieceIsQueenRook[13];
+extern int PieceIsQueenBishop[13];
+extern int PieceIsKnight[13];
+extern int PieceIsPawn[13];
+extern int PieceIsSlider[13];
+
 
 #define CONVERT_FILE_AND_RANK_TO_SQUARE(file, rank) ( (21 + (file) ) + ( (rank) * 10 ) )
 #define SQ64_TO_SQ120(sq120) (square120_to_square64[(sq120)])
 #define SQ120_TO_SQ64(sq64) (square64_to_square120[(sq64)])
 #define SETBIT(bitboard, square) ((bitboard) |= SetMask[(square)])
 #define CLEARBIT(bitboard, square) ((bitboard) &= SetMask[(square)])
+
+#define PieceIsKnight(p) (PieceIsKnight[(p)])
+#define PieceIsQueenRook(p) (PieceIsQueenRook[(p)])
+#define PieceIsQueenBishop(p) (PieceIsQueenBishop[(p)])
+#define PieceIsKing(p) (PieceIsKing[(p)])
 
 // init.cpp
 extern void InitAll();
@@ -97,5 +156,10 @@ extern void InitAll();
 extern void PrintBitBoard(U64 bb);
 extern int PopBit(U64 *bb);
 extern int CountBits(U64 b);
+
+// attack_geneartor.cpp
+extern int IsSquareAttacked(const int square, const int side, Board *board);
+
+extern void PrintMoveList(const MOVELIST *move_list);
 
 #endif

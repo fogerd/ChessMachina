@@ -8,13 +8,38 @@
 
 #include <stdlib.h>
 #include "defs.h"
-
+#include <iostream>
 
 int square120_to_square64[BOARD_SQUARE_NUMBER];
 int square64_to_square120[64];
 
 U64 SetMask[64];
 U64 ClearMask[64];
+
+// Keep track of while File / Rank a given square is in
+int file_of[BOARD_SQUARE_NUMBER];
+int rank_of[BOARD_SQUARE_NUMBER];
+
+void InitFilesAndRanks() {
+	int index = 0;
+	int file = FILE_A;
+	int rank = RANK_1;
+	int square = A1;
+
+	for(index = 0; index < BOARD_SQUARE_NUMBER; ++index) {
+		file_of[index] = OFFBOARD;
+		rank_of[index] = OFFBOARD;
+	}
+
+	for(rank = RANK_1; rank <= RANK_8; ++rank) {
+		for(file = FILE_A; file <= FILE_H; ++file) {
+			square = CONVERT_FILE_AND_RANK_TO_SQUARE(file,rank);
+			file_of[square] = file;
+			rank_of[square] = rank;
+		}
+	}
+}
+
 
 void InitBitMasks() {
 	int index = 0;
@@ -59,4 +84,5 @@ void InitSquare120To64() {
 void InitAll() {
 	InitSquare120To64();
 	InitBitMasks();
+	InitFilesAndRanks();
 }

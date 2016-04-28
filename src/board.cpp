@@ -48,8 +48,19 @@ void Board::UpdateMaterial() {
 		}
 	}
 
+	if (piece == WHITE_PAWN) {
+		SETBIT(pawns[WHITE],SQ120_TO_SQ64(square));
+		SETBIT(pawns[BOTH],SQ120_TO_SQ64(square));
+	}
+	else if (piece == BLACK_PAWN) {
+		SETBIT(pawns[BLACK],SQ120_TO_SQ64(square));
+		SETBIT(pawns[BOTH],SQ120_TO_SQ64(square));
+	}
 }
 
+int Board::ValidBoard() {
+	return 0;
+}
 
 // Convert 120 square board to 64 squares
 void Board::InitSquare120To64() {
@@ -139,11 +150,12 @@ void Board::ResetBoard() {
 		pieces[SQ120_TO_SQ64(index)] = EMPTY;
 	}
 
-	for(index = 0; index < 3; ++index) {
+	for(index = 0; index < 2; ++index) {
 		big_pieces_count[index] = 0;
 		major_pieces_count[index] = 0;
 		minor_pieces_count[index] = 0;
 		pawns[index] = 0ULL;
+		material_score[index] = 0;
 	}
 
 	for(index = 0; index < 13; ++index) {
