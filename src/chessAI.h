@@ -13,6 +13,7 @@ class GameControl{
 
 
     public:
+	GameControl();
         int minimax(Board *_B , int depth);
         int maxSearch( int depth , Board *_B );
         int minSearch( int depth , Board *_B );
