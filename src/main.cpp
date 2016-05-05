@@ -17,6 +17,7 @@
 #include "hash.h"
 #include "move_generator.h"
 #include "perft_testing.h"
+#include "chessAI.h"
 
 #define PERFT "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
 
@@ -54,6 +55,7 @@ int main() {
 	int Move = NOMOVE;
 	MOVELIST move_list[1];
 	int size = 0;
+	GameControl AI;
 
 	// MAIN LOOP
 	while (true) {
@@ -72,10 +74,12 @@ int main() {
 			std::cout << Move << std::endl;
 			if (Move != NOMOVE) {
 				MakeMove(b1, Move);
-				MoveGen.GenerateAllMoves(b1, move_list);
-				size = move_list->move_count;
-				int random_move = rand() % size;
-				MakeMove(b1,move_list->moves[random_move].move);
+				MakeMove(b1,AI.minimax(b1, 3));
+				//minimax(b1, 2);
+				//MoveGen.GenerateAllMoves(b1, move_list);
+				//size = move_list->move_count;
+				//int random_move = rand() % size;
+				//MakeMove(b1,move_list->moves[random_move].move);
 			}
 		}
 
